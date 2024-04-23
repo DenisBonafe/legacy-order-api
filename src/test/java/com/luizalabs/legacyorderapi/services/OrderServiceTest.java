@@ -2,6 +2,8 @@ package com.luizalabs.legacyorderapi.services;
 
 import com.luizalabs.legacyorderapi.entities.Order;
 import com.luizalabs.legacyorderapi.repositories.OrderRepository;
+import com.luizalabs.legacyorderapi.responses.UsersResponse;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.luizalabs.legacyorderapi.utils.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -67,5 +70,25 @@ public class OrderServiceTest {
 
         assertEquals(orders, savedOrders);
         assertEquals(orders, retrievedOrders);
+    }
+
+    @Test
+    void testGetOrders() {
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
+
+        when(repository.findAll()).thenReturn(orders);
+        List<Order> result = service.getOrders();
+        assertEquals(orders, result);
+    }
+
+    @Test
+    void testGetUsersResponse() {
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
+        orders.add(new Order(UUID_B, USER_ID_B, USER_NAME_B, ORDER_ID_B, PRODUCT_ID_B, PRODUCT_VALUE_B, ORDER_DATE_B));
+        UsersResponse usersResponse = service.getUsersResponse(orders);
+
+        assertEquals(2, usersResponse.getCount());
     }
 }

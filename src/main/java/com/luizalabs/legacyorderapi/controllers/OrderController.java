@@ -35,12 +35,13 @@ public class OrderController {
 
     @GetMapping()
     public ResponseEntity<UsersResponse> listOrders() {
-        return null;
-        // TODO: Buscar  todos os pedidos da base de dados
-        // TODO: Agrupar por Usuario, Pedidos e Produtos
-        // TODO: Somar o valor total dos produtos por pedido
-        // TODO: Retornar lista agrupada
-        // TODO: Tratar exception
+        try {
+            List<Order> orders = service.getOrders();
+            UsersResponse usersResponse = service.getUsersResponse(orders);
+            return ResponseEntity.status(HttpStatus.OK).body(usersResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UsersResponse());
+        }
     }
 
 }

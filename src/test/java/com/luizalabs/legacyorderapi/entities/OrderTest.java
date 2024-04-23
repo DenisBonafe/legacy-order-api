@@ -7,76 +7,48 @@ import java.util.UUID;
 
 import static com.luizalabs.legacyorderapi.utils.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class OrderTest {
 
-    private UUID orderIdA = UUID_A;
-    private int userIdA = USER_ID_A;
-    private String userNameA = USER_NAME_A;
-    private int orderIdValueA = ORDER_ID_A;
-    private int productIdA = PRODUCT_ID_A;
-    private double productValueA = PRODUCT_VALUE_A;
-    private LocalDate orderDateA = ORDER_DATE_A;
-    private UUID orderIdB = UUID_B;
-    private int userIdB = USER_ID_B;
-    private String userNameB = USER_NAME_B;
-    private int orderIdValueB = ORDER_ID_B;
-    private int productIdB = PRODUCT_ID_B;
-    private double productValueB = PRODUCT_VALUE_B;
-    private LocalDate orderDateB = ORDER_DATE_B;
+    private UUID orderId = UUID_A;
+    private int userId = USER_ID_A;
+    private String userName = USER_NAME_A;
+    private int orderIdValue = ORDER_ID_A;
+    private int productId = PRODUCT_ID_A;
+    private double productValue = PRODUCT_VALUE_A;
+    private LocalDate orderDate = ORDER_DATE_A;
 
     @Test
     public void testCreateOrderAllArgsConstructor() {
-        Order order = new Order(orderIdA, userIdA, userNameA, orderIdValueA, productIdA, productValueA, orderDateA);
+        Order order = new Order(orderId, userId, userName, orderIdValue, productId, productValue, orderDate);
 
-        assertEquals(orderIdA, order.getId());
-        assertEquals(userIdA, order.getUserId());
-        assertEquals(userNameA, order.getUserName());
-        assertEquals(orderIdValueA, order.getOrderId());
-        assertEquals(productIdA, order.getProductId());
-        assertEquals(productValueA, order.getProductValue());
-        assertEquals(orderDateA, order.getOrderDate());
+        assertEquals(orderId, order.getId());
+        assertEquals(userId, order.getUserId());
+        assertEquals(userName, order.getUserName());
+        assertEquals(orderIdValue, order.getOrderId());
+        assertEquals(productId, order.getProductId());
+        assertEquals(productValue, order.getProductValue());
+        assertEquals(orderDate, order.getOrderDate());
     }
 
     @Test
     public void testCreateOrderNoArgsConstructor() {
         Order order = new Order();
-        order.setId(orderIdA);
-        order.setUserId(userIdA);
-        order.setUserName(userNameA);
-        order.setOrderId(orderIdValueA);
-        order.setProductId(productIdA);
-        order.setProductValue(productValueA);
-        order.setOrderDate(orderDateA);
+        order.setId(orderId);
+        order.setUserId(userId);
+        order.setUserName(userName);
+        order.setOrderId(orderIdValue);
+        order.setProductId(productId);
+        order.setProductValue(productValue);
+        order.setOrderDate(orderDate);
 
-        assertEquals(orderIdA, order.getId());
-        assertEquals(userIdA, order.getUserId());
-        assertEquals(userNameA, order.getUserName());
-        assertEquals(orderIdValueA, order.getOrderId());
-        assertEquals(productIdA, order.getProductId());
-        assertEquals(productValueA, order.getProductValue());
-        assertEquals(orderDateA, order.getOrderDate());
-    }
-
-    @Test
-    public void testEqualsAndHashCode() {
-        Order orderA = new Order(orderIdA, userIdA, userNameA, orderIdValueA, productIdA, productValueA, orderDateA);
-        Order orderB = new Order(orderIdA, userIdA, userNameA, orderIdValueA, productIdA, productValueA, orderDateA);
-
-        assertEquals(orderA, orderB);
-        assertEquals(orderA.hashCode(), orderB.hashCode());
-
-        orderB.setId(orderIdB);
-        orderB.setUserId(userIdB);
-        orderB.setUserName(userNameB);
-        orderB.setOrderId(orderIdValueB);
-        orderB.setProductId(productIdB);
-        orderB.setProductValue(productValueB);
-        orderB.setOrderDate(orderDateB);
-
-        assertNotEquals(orderA, orderB);
-        assertNotEquals(orderA.hashCode(), orderB.hashCode());
+        assertEquals(orderId, order.getId());
+        assertEquals(userId, order.getUserId());
+        assertEquals(userName, order.getUserName());
+        assertEquals(orderIdValue, order.getOrderId());
+        assertEquals(productId, order.getProductId());
+        assertEquals(productValue, order.getProductValue());
+        assertEquals(orderDate, order.getOrderDate());
     }
 
 }

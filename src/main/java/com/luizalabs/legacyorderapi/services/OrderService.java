@@ -2,6 +2,11 @@ package com.luizalabs.legacyorderapi.services;
 
 import com.luizalabs.legacyorderapi.entities.Order;
 import com.luizalabs.legacyorderapi.repositories.OrderRepository;
+import com.luizalabs.legacyorderapi.responses.UserResponse;
+import com.luizalabs.legacyorderapi.responses.UsersResponse;
+import com.luizalabs.legacyorderapi.responses.OrderResponse;
+import com.luizalabs.legacyorderapi.responses.ProductResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +17,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -45,4 +51,32 @@ public class OrderService {
         return repository.saveAll(orders);
     }
 
+    public UsersResponse getUsersResponse(List<Order> orders) {
+        List<UserResponse> userResponses = orders.stream()
+                .collect(Collectors.groupingBy(Order::getUserId))
+                .entrySet().stream()
+                .map(entry -> {
+                    List<OrderResponse> orderResponseList = entry.getValue().stream()
+                            .collect(Collectors.groupingBy(Order::getOrderId))
+                            .entrySet().stream()
+                            .map(orderEntry -> {
+                                List<ProductResponse> products = orderEntry.getValue().stream()
+                                        .map(order -> new ProductResponse(order.getProductId(), String.valueOf(order.getProductValue())))
+                                        .collect(Collectors.toList());
+                                double total = orderEntry.getValue().stream()
+                                        .mapToDouble(Order::getProductValue)
+                                        .sum();
+                                return new OrderResponse(orderEntry.getKey(), String.valueOf(total), orderEntry.getValue().get(0).getOrderDate().toString(), products);
+                            })
+                            .collect(Collectors.toList());
+                    return new UserResponse(entry.getKey(), entry.getValue().get(0).getUserName(), orderResponseList);
+                }).collect(Collectors.toList());
+
+        return new UsersResponse(userResponses, userResponses.size());
+    }
+
+    public List<Order> getOrders() {
+        List<Order> orders = repository.findAll();
+        return orders;
+    }
 }
