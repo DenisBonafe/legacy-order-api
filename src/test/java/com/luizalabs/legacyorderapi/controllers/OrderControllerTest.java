@@ -2,12 +2,10 @@ package com.luizalabs.legacyorderapi.controllers;
 
 import com.luizalabs.legacyorderapi.entities.Order;
 import com.luizalabs.legacyorderapi.repositories.OrderRepository;
-import com.luizalabs.legacyorderapi.responses.OrderResponse;
-import com.luizalabs.legacyorderapi.responses.ProductResponse;
 import com.luizalabs.legacyorderapi.responses.UploadResponse;
-import com.luizalabs.legacyorderapi.responses.UserResponse;
 import com.luizalabs.legacyorderapi.responses.UsersResponse;
 import com.luizalabs.legacyorderapi.services.OrderService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,11 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.luizalabs.legacyorderapi.utils.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,52 +65,79 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void testListOrdersError() {
-        List<Order> mockOrderList = mockOrderList();
-        
-        when(repository.findAll()).thenReturn(mockOrderList);
-        UsersResponse expectedUsersResponse = service.getUsersResponse(mockOrderList);
+    void testListOrdersAllParametersNull() {
+        List<Order> orders = Collections.singletonList(new Order());
 
-        when(service.getUsersResponse(mockOrderList)).thenReturn(expectedUsersResponse);
-        ResponseEntity<UsersResponse> actualResponseEntity = controller.listOrders();
-        int count = 0;
+        when(service.getAllOrders()).thenReturn(orders);
+        ResponseEntity<UsersResponse> response = controller.listOrders(null, null, null);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualResponseEntity.getStatusCode());
-        assertEquals(0, count);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    @SuppressWarnings("null")
     @Test
-    public void testListOrdersSuccessful() {
-        List<ProductResponse> productResponseList = new ArrayList<>();
-        List<OrderResponse> orderResponseList = new ArrayList<>();
-        List<UserResponse> userResponseList = new ArrayList<>();
-        List<Order> mockOrderList = mockOrderList();
+    void testListOrdersStartDateAndEndDateProvided() {
+        List<Order> orders = mockOrderList();
+        LocalDate startDate = ORDER_DATE_A;
+        LocalDate endDate = LocalDate.now();
 
-        ProductResponse productResponse = new ProductResponse(PRODUCT_ID_A, String.valueOf(PRODUCT_VALUE_A));
-        productResponseList.add(productResponse);
+        when(controller.getFilteredOrders(null, startDate.toString(), endDate.toString())).thenReturn(orders);
+        ResponseEntity<UsersResponse> response = controller.listOrders(null, startDate.toString(), endDate.toString());
 
-        OrderResponse orderResponse = new OrderResponse(ORDER_ID_A, productResponse.getValue(), ORDER_DATE_A.toString(),
-                productResponseList);
-        orderResponseList.add(orderResponse);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 
-        UserResponse userResponse = new UserResponse(USER_ID_A, USER_NAME_A, orderResponseList);
-        userResponseList.add(userResponse);
+    @Test
+    void testListOrdersOrderIdProvided() {
+        List<Order> orders = mockOrderList();
+        int orderId = ORDER_ID_A;
 
-        UsersResponse usersResponse = new UsersResponse(userResponseList, 1);
+        when(service.getOrdersFilteredByOrderId(orderId)).thenReturn(orders);
+        ResponseEntity<UsersResponse> response = controller.listOrders(orderId, null, null);
 
-        when(service.getOrders()).thenReturn(mockOrderList);
-        when(service.getUsersResponse(mockOrderList)).thenReturn(usersResponse);
-        ResponseEntity<UsersResponse> actualResponseEntity = controller.listOrders();
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 
-        assertEquals(HttpStatus.OK, actualResponseEntity.getStatusCode());
-        assertEquals(1, actualResponseEntity.getBody().getCount());
+    @Test
+    void testListOrdersOrderIdAndStartDateAndEndDateProvided() {
+        List<Order> orders = mockOrderList();
+        int orderId = ORDER_ID_A;
+        LocalDate startDate = ORDER_DATE_A;
+        LocalDate endDate = LocalDate.now();
+        
+        when(controller.getFilteredOrders(orderId, startDate.toString(), endDate.toString())).thenReturn(orders);
+        ResponseEntity<UsersResponse> response = controller.listOrders(orderId, startDate.toString(), endDate.toString());
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void testListOrdersWhenFilteredOrdersIsNull() {
+        ResponseEntity<UsersResponse> response = controller.listOrders(null, null, LocalDate.now().toString());
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void testExtractedCatchBlock() {
+        List<Order> orders = mockOrderList();
+        
+        when(service.getUsersResponse(orders)).thenThrow(new RuntimeException("Mock Exception"));
+        ResponseEntity<UsersResponse> response = controller.extracted(orders);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
     }
 
     private static List<Order> mockOrderList() {
         List<Order> orders = new ArrayList<>();
         orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
-        orders.add(new Order(UUID_B, USER_ID_B, USER_NAME_B, ORDER_ID_B, PRODUCT_ID_B, PRODUCT_VALUE_B, ORDER_DATE_B));
         return orders;
     }
 

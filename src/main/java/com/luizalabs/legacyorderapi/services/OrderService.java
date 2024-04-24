@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,15 +61,7 @@ public class OrderService {
                     List<OrderResponse> orderResponseList = entry.getValue().stream()
                             .collect(Collectors.groupingBy(Order::getOrderId))
                             .entrySet().stream()
-                            .map(orderEntry -> {
-                                List<ProductResponse> products = orderEntry.getValue().stream()
-                                        .map(order -> new ProductResponse(order.getProductId(), String.valueOf(order.getProductValue())))
-                                        .collect(Collectors.toList());
-                                double total = orderEntry.getValue().stream()
-                                        .mapToDouble(Order::getProductValue)
-                                        .sum();
-                                return new OrderResponse(orderEntry.getKey(), String.valueOf(total), orderEntry.getValue().get(0).getOrderDate().toString(), products);
-                            })
+                            .map(this.mapToOrderResponse())
                             .collect(Collectors.toList());
                     return new UserResponse(entry.getKey(), entry.getValue().get(0).getUserName(), orderResponseList);
                 }).collect(Collectors.toList());
@@ -75,8 +69,32 @@ public class OrderService {
         return new UsersResponse(userResponses, userResponses.size());
     }
 
-    public List<Order> getOrders() {
-        List<Order> orders = repository.findAll();
-        return orders;
+    public List<Order> getAllOrders() {
+        return repository.findAll();
+    }
+
+    public List<Order> getOrdersFilteredByOrderId(int orderId) {
+        return repository.findByOrderId(orderId);
+    }
+
+    public List<Order> getOrdersBetweenDateFilteredById(int orderId, LocalDate startDate, LocalDate endDate) {
+        return repository.findByOrderIdAndOrderDateGreaterThanAndOrderDateLessThan(orderId, startDate, endDate);
+    }
+
+    public List<Order> getOrdersFilteredByOrderDateBetween(LocalDate startDate, LocalDate endDate) {
+        return repository.findByOrderDateBetween(startDate, endDate);
+    }
+
+    private Function<? super Entry<Integer, List<Order>>, ? extends OrderResponse> mapToOrderResponse() {
+        return orderEntry -> {
+            List<ProductResponse> products = orderEntry.getValue().stream()
+                    .map(order -> new ProductResponse(order.getProductId(), String.valueOf(order.getProductValue())))
+                    .collect(Collectors.toList());
+            double total = orderEntry.getValue().stream()
+                    .mapToDouble(Order::getProductValue)
+                    .sum();
+            return new OrderResponse(orderEntry.getKey(), String.valueOf(total),
+                    orderEntry.getValue().get(0).getOrderDate().toString(), products);
+        };
     }
 }

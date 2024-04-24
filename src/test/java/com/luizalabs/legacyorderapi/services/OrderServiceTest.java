@@ -78,7 +78,7 @@ public class OrderServiceTest {
         orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
 
         when(repository.findAll()).thenReturn(orders);
-        List<Order> result = service.getOrders();
+        List<Order> result = service.getAllOrders();
         assertEquals(orders, result);
     }
 
