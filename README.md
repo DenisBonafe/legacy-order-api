@@ -35,23 +35,15 @@ Para rodar o projeto localmente, siga estas etapas:
 
 ## **Tecnologias Utilizadas**
 
-- Spring Boot: Framework Java para criação de aplicativos web.
-- H2 Database: Banco de dados em memória para armazenamento dos pedidos.
-- JPA: API padrão do Java para mapeamento objeto-relacional.
-- Lombok: Biblioteca para simplificar o desenvolvimento reduzindo a quantidade de código boilerplate.
-- JUnit: Framework de teste para Java.
-- Mockito: Framework para criação de mocks em testes unitários.
-- Insomnia: Ferramenta para testar APIs.
+- [Spring Boot:](https://spring.io/projects/spring-boot) Framework Java para criação de aplicativos web.
+- [H2 Database:](https://www.h2database.com/html/main.html) Banco de dados em memória para armazenamento dos pedidos.
+- [JPA:](https://docs.oracle.com/javaee/6/tutorial/doc/bnbpz.html) API padrão do Java para mapeamento objeto-relacional.
+- [Lombok:](https://projectlombok.org/) Biblioteca para simplificar o desenvolvimento reduzindo a quantidade de código boilerplate.
+- [JUnit:](https://junit.org/junit5/docs/current/user-guide/) Framework de teste para Java.
+- [Mockito:](https://site.mockito.org/) Framework para criação de mocks em testes unitários.
+- [Insomnia:](https://support.insomnia.rest/) Ferramenta para testar APIs.
 
 ## **Referências**
-
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [H2 Database Documentation](https://www.h2database.com/html/main.html)
-- [JPA Documentation](https://docs.oracle.com/javaee/6/tutorial/doc/bnbpz.html)
-- [Lombok Documentation](https://projectlombok.org/)
-- [JUnit Documentation](https://junit.org/junit5/docs/current/user-guide/)
-- [Mockito Documentation](https://site.mockito.org/)
-- [Insomnia Documentation](https://support.insomnia.rest/)
 
 - [Spring Boot](https://spring.io/projects/spring-boot): Framework Java para criação de aplicativos web.
 - [Introdução ao Spring Boot](https://medium.com/@krishankantsinghal/spring-boot-start-up-guide-b857f02f67f9) (Medium)
