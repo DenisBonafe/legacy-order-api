@@ -39,5 +39,4 @@ build/
 .DS_Store
 
 ### DeepSource files ###
-.deepsource.toml
 bin/deepsource
