@@ -37,3 +37,7 @@ build/
 
 ### MacOS ###
 .DS_Store
+
+### DeepSource files ###
+.deepsource.toml
+bin/deepsource

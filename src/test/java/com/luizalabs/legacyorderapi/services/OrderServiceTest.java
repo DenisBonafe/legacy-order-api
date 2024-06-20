@@ -75,7 +75,7 @@ public class OrderServiceTest {
     @Test
     void testGetOrders() {
         List<Order> orders = new ArrayList<>();
-        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
+        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, INITIAL_DATE_A));
 
         when(repository.findAll()).thenReturn(orders);
         List<Order> result = service.getAllOrders();
@@ -85,8 +85,8 @@ public class OrderServiceTest {
     @Test
     void testGetUsersResponse() {
         List<Order> orders = new ArrayList<>();
-        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, ORDER_DATE_A));
-        orders.add(new Order(UUID_B, USER_ID_B, USER_NAME_B, ORDER_ID_B, PRODUCT_ID_B, PRODUCT_VALUE_B, ORDER_DATE_B));
+        orders.add(new Order(UUID_A, USER_ID_A, USER_NAME_A, ORDER_ID_A, PRODUCT_ID_A, PRODUCT_VALUE_A, INITIAL_DATE_A));
+        orders.add(new Order(UUID_B, USER_ID_B, USER_NAME_B, ORDER_ID_B, PRODUCT_ID_B, PRODUCT_VALUE_B, INITIAL_DATE_B));
         UsersResponse usersResponse = service.getUsersResponse(orders);
 
         assertEquals(2, usersResponse.getCount());

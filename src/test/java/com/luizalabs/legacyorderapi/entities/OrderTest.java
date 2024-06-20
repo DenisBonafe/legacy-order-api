@@ -16,7 +16,7 @@ public class OrderTest {
     private int orderIdValue = ORDER_ID_A;
     private int productId = PRODUCT_ID_A;
     private double productValue = PRODUCT_VALUE_A;
-    private LocalDate orderDate = ORDER_DATE_A;
+    private LocalDate orderDate = INITIAL_DATE_A;
 
     @Test
     public void testCreateOrderAllArgsConstructor() {
