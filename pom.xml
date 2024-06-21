@@ -47,15 +47,15 @@
 	</dependencies>
 
 	<build>
-		<plugins>
+		<plugins>			
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<version>0.8.12</version> <!-- Use a versão mais recente -->
 				<executions>
 					<execution>
 						<goals>
-							<goal>prepare-agent</goal>
+						<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 					<execution>
@@ -74,8 +74,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.1.2</version>
+				<configuration>
+					<forkCount>1</forkCount>
+					<reuseForks>true</reuseForks>
+					<argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
